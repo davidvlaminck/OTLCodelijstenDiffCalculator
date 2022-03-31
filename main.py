@@ -13,9 +13,9 @@ if __name__ == '__main__':
     }
 
     temp_dir_path = 'C:\\temp'
-    GitHubDownloader.download_all_branches(branches, temp_dir=temp_dir_path)
 
     calculator = KeuzelijstDiffCalculator(branches)
+    calculator.download_lists(temp_dir_path)
     calculator.convert_branches_to_keuzelijsten()
     differences = calculator.calculate_differences()
 

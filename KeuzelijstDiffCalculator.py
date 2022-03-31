@@ -12,16 +12,18 @@ class KeuzelijstDiffCalculator:
             raise ValueError('branches dict should contain at least 2 branches')
         self.branches_dict = branches_dict
         self.keuzelijsten = {}
+        self.temp_dir_path = ''
 
-    def download_lists(self):
-        GitHubDownloader.download_all_branches(self.branches_dict)
-        pass
+    def download_lists(self, temp_dir_path: str=''):
+        if temp_dir_path != '':
+            self.temp_dir_path = temp_dir_path + '\\'
+        GitHubDownloader.download_all_branches(self.branches_dict, temp_dir=self.temp_dir_path)
 
     def convert_branches_to_keuzelijsten(self):
         for branch in self.branches_dict:
             self.keuzelijsten[branch] = {}
-            for file in os.listdir(branch + '/codelijsten'):
-                kl = KeuzelijstCreator.read_ttl_file_and_create_keuzelijst(branch + '/codelijsten/' + file)
+            for file in os.listdir(self.temp_dir_path + branch + '/codelijsten'):
+                kl = KeuzelijstCreator.read_ttl_file_and_create_keuzelijst(self.temp_dir_path + branch + '/codelijsten/' + file)
                 self.keuzelijsten[branch][kl.objectUri] = kl
 
         pass
