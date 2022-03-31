@@ -39,6 +39,11 @@ vierdeLijstAim.keuzelijstWaardes = {
     'uri1': KeuzelijstWaarde(label='waarde1', definitie='definitie1', objectUri='uri1', invulwaarde='invulwaarde1'),
     'uri2': KeuzelijstWaarde(label='waarde2', definitie='definitie2', objectUri='uri2', invulwaarde='invulwaarde2')}
 
+vijfdeLijstAim = Keuzelijst(label='label', definitie='definitie', objectUri='kl1')
+vijfdeLijstAim.keuzelijstWaardes = {
+    'uri1': KeuzelijstWaarde(label='waarde1', definitie='definitie1', objectUri='uri1', invulwaarde='invulwaarde1'),
+    'uri2': KeuzelijstWaarde(label='waarde2_aangepast', definitie='definitie2_aangepast', objectUri='uri2', invulwaarde='invulwaarde2_aangepast')}
+
 
 class KeuzelijstDiffCalculatorTests(unittest.TestCase):
     def test_calculate_differences_identiek(self):
@@ -111,7 +116,20 @@ class KeuzelijstDiffCalculatorTests(unittest.TestCase):
         testcalculator_verschillende_keuzelijst.keuzelijsten['aim']['kl1'] = copy.deepcopy(vierdeLijstAim)
 
         result = testcalculator_verschillende_keuzelijst.calculate_differences()
+        self.assertEqual(2, len(result))
+        self.assertEqual('prd en aim keuzelijst verschillen van label', result[0][0])
+        self.assertEqual('prd en aim keuzelijst verschillen van definitie', result[1][0])
+
+    def test_calculate_differences_verschillen_in_keuzelijstwaardes(self):
+        testcalculator_verschillende_keuzelijstwaardes = KeuzelijstDiffCalculator(branches)
+        testcalculator_verschillende_keuzelijstwaardes.keuzelijsten['prd'] = {}
+        testcalculator_verschillende_keuzelijstwaardes.keuzelijsten['prd']['kl1'] = copy.deepcopy(eersteLijstPrd)
+
+        testcalculator_verschillende_keuzelijstwaardes.keuzelijsten['aim'] = {}
+        testcalculator_verschillende_keuzelijstwaardes.keuzelijsten['aim']['kl1'] = copy.deepcopy(vijfdeLijstAim)
+
+        result = testcalculator_verschillende_keuzelijstwaardes.calculate_differences()
         self.assertEqual(3, len(result))
-        self.assertEqual('prd en aim keuzelijst verschillen van invulwaarde', result[0][0])
-        self.assertEqual('prd en aim keuzelijst verschillen van labe', result[0][1])
-        self.assertEqual('prd en aim keuzelijst verschillen van definitie', result[0][2])
+        self.assertEqual('prd en aim keuzelijstwaarde verschillen van notatie', result[0][0])
+        self.assertEqual('prd en aim keuzelijstwaarde verschillen van label', result[1][0])
+        self.assertEqual('prd en aim keuzelijstwaarde verschillen van definitie', result[2][0])
