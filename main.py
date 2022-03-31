@@ -1,20 +1,18 @@
+import datetime
 import json
-import os.path
-
 
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google.oauth2 import service_account
 
-from GitHubDownloader import GitHubDownloader
-from KeuzeLijstCreator import KeuzelijstCreator
 from KeuzelijstDiffCalculator import KeuzelijstDiffCalculator
+from SheetsWrapper import SheetsWrapper
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly', 'https://www.googleapis.com/auth/spreadsheets']
 
 # The ID and range of a sample spreadsheet.
-SAMPLE_SPREADSHEET_ID = '1TxiT8eRqZfZz0VHN-lFbxVGrCEwCXRivKPTBQha_ccs'
-SAMPLE_RANGE_NAME = 'Historiek!A3'
+SAMPLE_SPREADSHEET_ID = '14PwD7_mHJ7lZbBOBfPvejxm5-uwuFzxvQySHKgzxoOk'
+SAMPLE_RANGE_NAME = 'Blad1!A1:B2'
 
 
 def main():
@@ -52,7 +50,7 @@ def main():
             range=SAMPLE_RANGE_NAME,
             body=dict(
                 majorDimension='ROWS',
-                values=[['2']])
+                values=[['2','3'],['2']])
         ).execute()
 
     except HttpError as err:
@@ -66,4 +64,15 @@ if __name__ == '__main__':
     }
     calculator = KeuzelijstDiffCalculator(branches)
     calculator.convert_branches_to_keuzelijsten()
-    calculator.calculate_differences()
+    differences = calculator.calculate_differences()
+    lines_to_write = [[f'Verschillen rapport gemaakt op {datetime.datetime.now()}'], []]
+    lines_to_write.extend(differences)
+
+    sheetsWrapper = SheetsWrapper(service_cred_path='C:\\resources\\driven-wonder-149715-ca8bdf010930.json',
+                                  readonly_scope=False)
+    sheetsWrapper.write_data_to_sheet(spreadsheet_id='14PwD7_mHJ7lZbBOBfPvejxm5-uwuFzxvQySHKgzxoOk',
+                                      sheet_name='overzicht',
+                                      cell_start='A1',
+                                      data=lines_to_write)
+
+    pass
