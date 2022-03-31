@@ -1,3 +1,4 @@
+import copy
 import os
 
 from GitHubDownloader import GitHubDownloader
@@ -28,13 +29,26 @@ class KeuzelijstDiffCalculator:
 
     def calculate_differences(self):
         differences = []
+        other_envs = list(self.branches_dict.keys())
+        other_envs.remove('prd')
 
+        for prdkeyKeuzelijst in self.keuzelijsten['prd']:
+            for env in other_envs:
+                if prdkeyKeuzelijst not in self.keuzelijsten[env]:
+                    differences.append([f'{env} ontbreekt een keuzelijst', prdkeyKeuzelijst])
+                    continue
+                for waardeUri in self.keuzelijsten['prd'][prdkeyKeuzelijst].keuzelijstWaardes:
+                    if waardeUri not in self.keuzelijsten[env][prdkeyKeuzelijst].keuzelijstWaardes:
+                        differences.append([f'{env} ontbreekt een waarde in keuzelijst', prdkeyKeuzelijst, waardeUri])
 
-        prdkeylist = self.keuzelijsten['prd'].keys()
-        for prdkeyKeuzelijst in prdkeylist:
-            for waardeUri in self.keuzelijsten['prd'][prdkeyKeuzelijst].keuzelijstWaardes:
-                if waardeUri not in self.keuzelijsten['aim'][prdkeyKeuzelijst].keuzelijstWaardes:
-                    differences.append(['aim ontbreekt volgende waarde', prdkeyKeuzelijst, waardeUri])
+        for env in other_envs:
+            for envkeyKeuzelijst in self.keuzelijsten[env].keys():
+                if envkeyKeuzelijst not in self.keuzelijsten['prd']:
+                    differences.append([f'prd ontbreekt een keuzelijst', envkeyKeuzelijst])
+                    continue
+                for waardeUri in self.keuzelijsten[env][envkeyKeuzelijst].keuzelijstWaardes:
+                    if waardeUri not in self.keuzelijsten['prd'][envkeyKeuzelijst].keuzelijstWaardes:
+                        differences.append([f'prd ontbreekt een waarde in keuzelijst', envkeyKeuzelijst, waardeUri])
 
         return differences
 
