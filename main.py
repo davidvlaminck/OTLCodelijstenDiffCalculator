@@ -1,4 +1,5 @@
 import datetime
+import shutil
 
 from GitHubDownloader import GitHubDownloader
 from KeuzelijstDiffCalculator import KeuzelijstDiffCalculator
@@ -11,7 +12,8 @@ if __name__ == '__main__':
         'prd': 'master'
     }
 
-    GitHubDownloader.download_all_branches(branches)
+    temp_dir_path = 'C:\\temp'
+    GitHubDownloader.download_all_branches(branches, temp_dir=temp_dir_path)
 
     calculator = KeuzelijstDiffCalculator(branches)
     calculator.convert_branches_to_keuzelijsten()
@@ -26,3 +28,6 @@ if __name__ == '__main__':
                                       sheet_name='overzicht',
                                       cell_start='A1',
                                       data=lines_to_write)
+
+    for branch in branches:
+        shutil.rmtree(temp_dir_path + '\\' + branch)
