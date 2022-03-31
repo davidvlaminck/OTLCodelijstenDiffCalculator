@@ -40,11 +40,11 @@ class SheetsWrapper:
         credentials = service_account.Credentials.from_service_account_info(gcp_sa_credentials)
         return credentials
 
-    def calculate_cell_range(self, cell_start: str = '', data: list = []):
+    def calculate_cell_range(self, cell_start: str = '', data: list = None):
         if cell_start == '':
             raise ValueError("cell_start can't be empty")
 
-        if data == []:
+        if len(data) == 0:
             raise ValueError("data can't be empty")
 
         column = re.split('\d', cell_start)[0]
@@ -56,7 +56,8 @@ class SheetsWrapper:
 
         return cell_start + ':' + end_column + str(end_row)
 
-    def convert_number_to_column(self, number: int) -> str:
+    @staticmethod
+    def convert_number_to_column(number: int) -> str:
         if number < 1 or number > 18278:
             raise ValueError
 
@@ -71,7 +72,8 @@ class SheetsWrapper:
         third = (int((number - 27) / 676) - 1) % 26 + 1
         return chr(ord('@') + third) + chr(ord('@') + second) + chr(ord('@') + first)
 
-    def convert_column_to_number(self, column: str) -> int:
+    @staticmethod
+    def convert_column_to_number(column: str) -> int:
         if len(column) < 1 or len(column) > 3:
             raise ValueError
 
