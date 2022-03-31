@@ -2,11 +2,10 @@ import rdflib
 
 
 class Keuzelijst:
-    def __init__(self, label='', notitie='', definitie='', objectUri=''):
+    def __init__(self, label='', definitie='', objectUri=''):
         self.label = label
         self.definitie = definitie
         self.objectUri = objectUri
-        self.notitie = notitie
         self.keuzelijstWaardes = {}
 
 
@@ -47,7 +46,7 @@ class KeuzelijstCreator:
                 elif '#prefLabel' in t[1]:
                     k.keuzelijstWaardes[t[0]].label = t[2]
                 elif '#notation' in t[1]:
-                    k.keuzelijstWaardes[t[0]].notitie = t[2]
+                    k.keuzelijstWaardes[t[0]].invulwaarde = t[2]
         return k
 
     @classmethod

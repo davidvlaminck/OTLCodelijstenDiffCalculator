@@ -9,30 +9,35 @@ branches = {
     'prd': 'master'
 }
 
-eersteLijstPrd = Keuzelijst(label='label', definitie='definitie', notitie='notitie', objectUri='kl1')
+eersteLijstPrd = Keuzelijst(label='label', definitie='definitie', objectUri='kl1')
 eersteLijstPrd.keuzelijstWaardes = {
     'uri1': KeuzelijstWaarde(label='waarde1', definitie='definitie1', objectUri='uri1', invulwaarde='invulwaarde1'),
     'uri2': KeuzelijstWaarde(label='waarde2', definitie='definitie2', objectUri='uri2', invulwaarde='invulwaarde2')}
 
-tweedeLijstPrd = Keuzelijst(label='label', definitie='definitie', notitie='notitie', objectUri='kl2')
+tweedeLijstPrd = Keuzelijst(label='label', definitie='definitie', objectUri='kl2')
 tweedeLijstPrd.keuzelijstWaardes = {
     'uri1': KeuzelijstWaarde(label='waarde1', definitie='definitie1', objectUri='uri1', invulwaarde='invulwaarde1'),
     'uri2': KeuzelijstWaarde(label='waarde2', definitie='definitie2', objectUri='uri2', invulwaarde='invulwaarde2')}
 
-eersteLijstAim = Keuzelijst(label='label', definitie='definitie', notitie='notitie', objectUri='kl1')
+eersteLijstAim = Keuzelijst(label='label', definitie='definitie', objectUri='kl1')
 eersteLijstAim.keuzelijstWaardes = {
     'uri1': KeuzelijstWaarde(label='waarde1', definitie='definitie1', objectUri='uri1', invulwaarde='invulwaarde1'),
     'uri2': KeuzelijstWaarde(label='waarde2', definitie='definitie2', objectUri='uri2', invulwaarde='invulwaarde2')}
 
-tweedeLijstAim = Keuzelijst(label='label', definitie='definitie', notitie='notitie', objectUri='kl2')
+tweedeLijstAim = Keuzelijst(label='label', definitie='definitie', objectUri='kl2')
 tweedeLijstAim.keuzelijstWaardes = {
     'uri1': KeuzelijstWaarde(label='waarde1', definitie='definitie1', objectUri='uri1', invulwaarde='invulwaarde1')}
 
-derdeLijstAim = Keuzelijst(label='label', definitie='definitie', notitie='notitie', objectUri='kl2')
+derdeLijstAim = Keuzelijst(label='label', definitie='definitie', objectUri='kl2')
 derdeLijstAim.keuzelijstWaardes = {
     'uri1': KeuzelijstWaarde(label='waarde1', definitie='definitie1', objectUri='uri1', invulwaarde='invulwaarde1'),
     'uri2': KeuzelijstWaarde(label='waarde2', definitie='definitie2', objectUri='uri2', invulwaarde='invulwaarde2'),
     'uri3': KeuzelijstWaarde(label='waarde3', definitie='definitie3', objectUri='uri3', invulwaarde='invulwaarde3')}
+
+vierdeLijstAim = Keuzelijst(label='label_aangepast', definitie='definitie_aangepast', objectUri='kl1')
+vierdeLijstAim.keuzelijstWaardes = {
+    'uri1': KeuzelijstWaarde(label='waarde1', definitie='definitie1', objectUri='uri1', invulwaarde='invulwaarde1'),
+    'uri2': KeuzelijstWaarde(label='waarde2', definitie='definitie2', objectUri='uri2', invulwaarde='invulwaarde2')}
 
 
 class KeuzelijstDiffCalculatorTests(unittest.TestCase):
@@ -72,27 +77,41 @@ class KeuzelijstDiffCalculatorTests(unittest.TestCase):
         self.assertEqual('prd ontbreekt een waarde in keuzelijst', result[0][0])
 
     def test_calculate_differences_ontbrekende_keuzelijst_in_aim(self):
-        testcalculator_ontbrekende_waarde = KeuzelijstDiffCalculator(branches)
-        testcalculator_ontbrekende_waarde.keuzelijsten['prd'] = {}
-        testcalculator_ontbrekende_waarde.keuzelijsten['prd']['kl1'] = copy.deepcopy(eersteLijstPrd)
-        testcalculator_ontbrekende_waarde.keuzelijsten['prd']['kl2'] = copy.deepcopy(tweedeLijstPrd)
+        testcalculator_ontbrekende_keuzelijst = KeuzelijstDiffCalculator(branches)
+        testcalculator_ontbrekende_keuzelijst.keuzelijsten['prd'] = {}
+        testcalculator_ontbrekende_keuzelijst.keuzelijsten['prd']['kl1'] = copy.deepcopy(eersteLijstPrd)
+        testcalculator_ontbrekende_keuzelijst.keuzelijsten['prd']['kl2'] = copy.deepcopy(tweedeLijstPrd)
 
-        testcalculator_ontbrekende_waarde.keuzelijsten['aim'] = {}
-        testcalculator_ontbrekende_waarde.keuzelijsten['aim']['kl1'] = copy.deepcopy(eersteLijstAim)
+        testcalculator_ontbrekende_keuzelijst.keuzelijsten['aim'] = {}
+        testcalculator_ontbrekende_keuzelijst.keuzelijsten['aim']['kl1'] = copy.deepcopy(eersteLijstAim)
 
-        result = testcalculator_ontbrekende_waarde.calculate_differences()
+        result = testcalculator_ontbrekende_keuzelijst.calculate_differences()
         self.assertEqual(1, len(result))
         self.assertEqual('aim ontbreekt een keuzelijst', result[0][0])
 
     def test_calculate_differences_ontbrekende_keuzelijst_in_prd(self):
-        testcalculator_ontbrekende_waarde = KeuzelijstDiffCalculator(branches)
-        testcalculator_ontbrekende_waarde.keuzelijsten['prd'] = {}
-        testcalculator_ontbrekende_waarde.keuzelijsten['prd']['kl1'] = copy.deepcopy(eersteLijstPrd)
+        testcalculator_ontbrekende_keuzelijst = KeuzelijstDiffCalculator(branches)
+        testcalculator_ontbrekende_keuzelijst.keuzelijsten['prd'] = {}
+        testcalculator_ontbrekende_keuzelijst.keuzelijsten['prd']['kl1'] = copy.deepcopy(eersteLijstPrd)
 
-        testcalculator_ontbrekende_waarde.keuzelijsten['aim'] = {}
-        testcalculator_ontbrekende_waarde.keuzelijsten['aim']['kl1'] = copy.deepcopy(eersteLijstAim)
-        testcalculator_ontbrekende_waarde.keuzelijsten['aim']['kl2'] = copy.deepcopy(tweedeLijstAim)
+        testcalculator_ontbrekende_keuzelijst.keuzelijsten['aim'] = {}
+        testcalculator_ontbrekende_keuzelijst.keuzelijsten['aim']['kl1'] = copy.deepcopy(eersteLijstAim)
+        testcalculator_ontbrekende_keuzelijst.keuzelijsten['aim']['kl2'] = copy.deepcopy(tweedeLijstAim)
 
-        result = testcalculator_ontbrekende_waarde.calculate_differences()
+        result = testcalculator_ontbrekende_keuzelijst.calculate_differences()
         self.assertEqual(1, len(result))
         self.assertEqual('prd ontbreekt een keuzelijst', result[0][0])
+
+    def test_calculate_differences_verschillen_in_keuzelijst(self):
+        testcalculator_verschillende_keuzelijst = KeuzelijstDiffCalculator(branches)
+        testcalculator_verschillende_keuzelijst.keuzelijsten['prd'] = {}
+        testcalculator_verschillende_keuzelijst.keuzelijsten['prd']['kl1'] = copy.deepcopy(eersteLijstPrd)
+
+        testcalculator_verschillende_keuzelijst.keuzelijsten['aim'] = {}
+        testcalculator_verschillende_keuzelijst.keuzelijsten['aim']['kl1'] = copy.deepcopy(vierdeLijstAim)
+
+        result = testcalculator_verschillende_keuzelijst.calculate_differences()
+        self.assertEqual(3, len(result))
+        self.assertEqual('prd en aim keuzelijst verschillen van invulwaarde', result[0][0])
+        self.assertEqual('prd en aim keuzelijst verschillen van labe', result[0][1])
+        self.assertEqual('prd en aim keuzelijst verschillen van definitie', result[0][2])
