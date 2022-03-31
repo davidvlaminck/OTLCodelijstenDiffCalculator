@@ -34,7 +34,7 @@ class KeuzelijstDiffCalculator:
         for prdkeyKeuzelijst in self.keuzelijsten['prd']:
             for env in other_envs:
                 if prdkeyKeuzelijst not in self.keuzelijsten[env]:
-                    differences.append([f'{env} ontbreekt een keuzelijst', prdkeyKeuzelijst])
+                    differences.append([f'prd heeft een keuzelijst die niet bestaat op {env}', prdkeyKeuzelijst])
                     continue
 
                 if self.keuzelijsten['prd'][prdkeyKeuzelijst].label != self.keuzelijsten[env][prdkeyKeuzelijst].label:
@@ -45,7 +45,7 @@ class KeuzelijstDiffCalculator:
 
                 for waardeUri in self.keuzelijsten['prd'][prdkeyKeuzelijst].keuzelijstWaardes:
                     if waardeUri not in self.keuzelijsten[env][prdkeyKeuzelijst].keuzelijstWaardes:
-                        differences.append([f'{env} ontbreekt een waarde in keuzelijst', prdkeyKeuzelijst, waardeUri])
+                        differences.append([f'prd heeft een waarde in een keuzelijst die niet bestaat op {env}', prdkeyKeuzelijst, waardeUri])
                     else:
                         klWaardePrd = self.keuzelijsten['prd'][prdkeyKeuzelijst].keuzelijstWaardes[waardeUri]
                         klWaardeEnv = self.keuzelijsten[env][prdkeyKeuzelijst].keuzelijstWaardes[waardeUri]
