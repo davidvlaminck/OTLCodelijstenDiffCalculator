@@ -2,23 +2,23 @@ import copy
 import re
 
 
-class SheetsRange:
-    def __init__(self, range: str = ''):
-        if range == '':
-            raise ValueError("can't initialize a SheetsRange object without input")
+class SheetsCell:
+    def __init__(self, cell: str = ''):
+        if cell == '':
+            raise ValueError("can't initialize a SheetsCell object without input")
 
         self._column_str = ''
         self._column_int = -1
         self._row = ''
 
-        self.range = range
+        self.cell = cell
 
     @property
-    def range(self):
+    def cell(self):
         return self._column_str + str(self._row)
 
-    @range.setter
-    def range(self, value):
+    @cell.setter
+    def cell(self, value):
         try:
             self._column_str = re.split(r'\d', value)[0]
             self._row = int(value[len(self._column_str):])
@@ -27,7 +27,7 @@ class SheetsRange:
         except ValueError as ex:
             raise ex
         except:
-            raise ValueError(f"can't set or update SheetsRange object with input {range}")
+            raise ValueError(f"can't set or update SheetsCell object with input {value}")
 
     @staticmethod
     def _convert_column_to_number(column: str) -> int:
