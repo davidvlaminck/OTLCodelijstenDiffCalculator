@@ -1,5 +1,4 @@
 import json
-import re
 from pathlib import Path
 
 from google.oauth2.credentials import Credentials
@@ -14,6 +13,7 @@ class SheetsWrapper:
         if service_cred_path == '':
             raise NotImplementedError('only access with service account is supported')
         self.service_cred_path = service_cred_path
+        self.credentials: None | Credentials = None
 
         if readonly_scope is None:
             raise ValueError('set readonly_scope to True or False')
@@ -32,6 +32,9 @@ class SheetsWrapper:
         ).execute()
 
     def authenticate(self) -> Credentials:
+        if self.credentials is not None:
+            return self.credentials
+
         cred_file_path = Path(self.service_cred_path)
         if not cred_file_path.is_file():
             raise FileNotFoundError(f"could not find the credentials file at {cred_file_path}")
@@ -39,8 +42,8 @@ class SheetsWrapper:
         with open(cred_file_path) as cred_file:
             gcp_sa_credentials = json.load(cred_file)
 
-        credentials = service_account.Credentials.from_service_account_info(gcp_sa_credentials)
-        return credentials
+        self.credentials = service_account.Credentials.from_service_account_info(gcp_sa_credentials)
+        return self.credentials
 
     def calculate_cell_range_by_data(self, cell_start: SheetsRange, data: list = None):
         if cell_start is None:
