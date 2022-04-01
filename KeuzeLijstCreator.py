@@ -40,7 +40,7 @@ class KeuzelijstCreator:
                     if not t[0] in k.keuzelijstWaardes:
                         kw = KeuzelijstWaarde()
                         kw.objectUri = t[0]
-                        k.keuzelijstWaardes[t[0]] = kw
+                        k.keuzelijstWaardes[t[0].replace('-test', '')] = kw
                 elif '#definition' in t[1]:
                     k.keuzelijstWaardes[t[0]].definitie = t[2]
                 elif '#prefLabel' in t[1]:

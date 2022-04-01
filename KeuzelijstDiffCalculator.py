@@ -24,7 +24,7 @@ class KeuzelijstDiffCalculator:
             self.keuzelijsten[branch] = {}
             for file in os.listdir(self.temp_dir_path + branch + '/codelijsten'):
                 kl = KeuzelijstCreator.read_ttl_file_and_create_keuzelijst(self.temp_dir_path + branch + '/codelijsten/' + file)
-                self.keuzelijsten[branch][kl.objectUri] = kl
+                self.keuzelijsten[branch][kl.objectUri.replace('-test', '')] = kl
 
     def calculate_differences(self):
         differences = []
