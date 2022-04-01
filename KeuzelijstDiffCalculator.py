@@ -36,41 +36,41 @@ class KeuzelijstDiffCalculator:
         for prdkeyKeuzelijst in self.keuzelijsten['prd']:
             for env in other_envs:
                 if prdkeyKeuzelijst not in self.keuzelijsten[env]:
-                    differences.append([f'prd heeft een keuzelijst die niet bestaat op {env}', prdkeyKeuzelijst])
+                    differences.append([env, f'prd heeft een keuzelijst die niet bestaat op {env}', prdkeyKeuzelijst])
                     continue
 
                 if self.keuzelijsten['prd'][prdkeyKeuzelijst].label != self.keuzelijsten[env][prdkeyKeuzelijst].label:
-                    differences.append([f'prd en {env} keuzelijst verschillen van label', prdkeyKeuzelijst, self.keuzelijsten['prd'][prdkeyKeuzelijst].label, self.keuzelijsten[env][prdkeyKeuzelijst].label])
+                    differences.append([env, f'prd en {env} keuzelijst verschillen van label', prdkeyKeuzelijst, self.keuzelijsten['prd'][prdkeyKeuzelijst].label, self.keuzelijsten[env][prdkeyKeuzelijst].label])
 
                 if self.keuzelijsten['prd'][prdkeyKeuzelijst].definitie != self.keuzelijsten[env][prdkeyKeuzelijst].definitie:
-                    differences.append([f'prd en {env} keuzelijst verschillen van definitie', prdkeyKeuzelijst, self.keuzelijsten['prd'][prdkeyKeuzelijst].definitie, self.keuzelijsten[env][prdkeyKeuzelijst].definitie])
+                    differences.append([env, f'prd en {env} keuzelijst verschillen van definitie', prdkeyKeuzelijst, self.keuzelijsten['prd'][prdkeyKeuzelijst].definitie, self.keuzelijsten[env][prdkeyKeuzelijst].definitie])
 
                 for waardeUri in self.keuzelijsten['prd'][prdkeyKeuzelijst].keuzelijstWaardes:
                     if waardeUri not in self.keuzelijsten[env][prdkeyKeuzelijst].keuzelijstWaardes:
-                        differences.append([f'prd heeft een waarde in een keuzelijst die niet bestaat op {env}', prdkeyKeuzelijst, waardeUri])
+                        differences.append([env, f'prd heeft een waarde in een keuzelijst die niet bestaat op {env}', prdkeyKeuzelijst, waardeUri])
                     else:
                         klWaardePrd = self.keuzelijsten['prd'][prdkeyKeuzelijst].keuzelijstWaardes[waardeUri]
                         klWaardeEnv = self.keuzelijsten[env][prdkeyKeuzelijst].keuzelijstWaardes[waardeUri]
 
                         if klWaardePrd.invulwaarde != klWaardeEnv.invulwaarde:
-                            differences.append([f'prd en {env} keuzelijstwaarde verschillen van notatie',
+                            differences.append([env, f'prd en {env} keuzelijstwaarde verschillen van notatie',
                                                 prdkeyKeuzelijst, waardeUri, klWaardePrd.invulwaarde, klWaardeEnv.invulwaarde])
 
                         if klWaardePrd.label != klWaardeEnv.label:
-                            differences.append([f'prd en {env} keuzelijstwaarde verschillen van label',
+                            differences.append([env, f'prd en {env} keuzelijstwaarde verschillen van label',
                                                 prdkeyKeuzelijst, waardeUri, klWaardePrd.label, klWaardeEnv.label])
 
                         if klWaardePrd.definitie != klWaardeEnv.definitie:
-                            differences.append([f'prd en {env} keuzelijstwaarde verschillen van definitie',
+                            differences.append([env, f'prd en {env} keuzelijstwaarde verschillen van definitie',
                                                 prdkeyKeuzelijst, waardeUri, klWaardePrd.definitie, klWaardeEnv.definitie])
 
         for env in other_envs:
             for envkeyKeuzelijst in self.keuzelijsten[env].keys():
                 if envkeyKeuzelijst not in self.keuzelijsten['prd']:
-                    differences.append(['prd ontbreekt een keuzelijst', envkeyKeuzelijst])
+                    differences.append([env, f'prd ontbreekt een keuzelijst t.o.v. {env}', envkeyKeuzelijst])
                     continue
                 for waardeUri in self.keuzelijsten[env][envkeyKeuzelijst].keuzelijstWaardes:
                     if waardeUri not in self.keuzelijsten['prd'][envkeyKeuzelijst].keuzelijstWaardes:
-                        differences.append(['prd ontbreekt een waarde in keuzelijst', envkeyKeuzelijst, waardeUri])
+                        differences.append([env, f'prd ontbreekt een waarde in keuzelijst t.o.v. {env}', envkeyKeuzelijst, waardeUri])
 
         return differences

@@ -67,7 +67,7 @@ class KeuzelijstDiffCalculatorTests(unittest.TestCase):
 
         result = testcalculator_ontbrekende_waarde.calculate_differences()
         self.assertEqual(1, len(result))
-        self.assertEqual('prd heeft een waarde in een keuzelijst die niet bestaat op aim', result[0][0])
+        self.assertEqual('prd heeft een waarde in een keuzelijst die niet bestaat op aim', result[0][1])
 
     def test_calculate_differences_ontbrekende_waarde_in_prd(self):
         testcalculator_ontbrekende_waarde = KeuzelijstDiffCalculator(branches)
@@ -79,7 +79,7 @@ class KeuzelijstDiffCalculatorTests(unittest.TestCase):
 
         result = testcalculator_ontbrekende_waarde.calculate_differences()
         self.assertEqual(1, len(result))
-        self.assertEqual('prd ontbreekt een waarde in keuzelijst', result[0][0])
+        self.assertEqual('prd ontbreekt een waarde in keuzelijst t.o.v. aim', result[0][1])
 
     def test_calculate_differences_ontbrekende_keuzelijst_in_aim(self):
         testcalculator_ontbrekende_keuzelijst = KeuzelijstDiffCalculator(branches)
@@ -92,7 +92,7 @@ class KeuzelijstDiffCalculatorTests(unittest.TestCase):
 
         result = testcalculator_ontbrekende_keuzelijst.calculate_differences()
         self.assertEqual(1, len(result))
-        self.assertEqual('prd heeft een keuzelijst die niet bestaat op aim', result[0][0])
+        self.assertEqual('prd heeft een keuzelijst die niet bestaat op aim', result[0][1])
 
     def test_calculate_differences_ontbrekende_keuzelijst_in_prd(self):
         testcalculator_ontbrekende_keuzelijst = KeuzelijstDiffCalculator(branches)
@@ -105,7 +105,7 @@ class KeuzelijstDiffCalculatorTests(unittest.TestCase):
 
         result = testcalculator_ontbrekende_keuzelijst.calculate_differences()
         self.assertEqual(1, len(result))
-        self.assertEqual('prd ontbreekt een keuzelijst', result[0][0])
+        self.assertEqual('prd ontbreekt een keuzelijst t.o.v. aim', result[0][1])
 
     def test_calculate_differences_verschillen_in_keuzelijst(self):
         testcalculator_verschillende_keuzelijst = KeuzelijstDiffCalculator(branches)
@@ -117,8 +117,8 @@ class KeuzelijstDiffCalculatorTests(unittest.TestCase):
 
         result = testcalculator_verschillende_keuzelijst.calculate_differences()
         self.assertEqual(2, len(result))
-        self.assertEqual('prd en aim keuzelijst verschillen van label', result[0][0])
-        self.assertEqual('prd en aim keuzelijst verschillen van definitie', result[1][0])
+        self.assertEqual('prd en aim keuzelijst verschillen van label', result[0][1])
+        self.assertEqual('prd en aim keuzelijst verschillen van definitie', result[1][1])
 
     def test_calculate_differences_verschillen_in_keuzelijstwaardes(self):
         testcalculator_verschillende_keuzelijstwaardes = KeuzelijstDiffCalculator(branches)
@@ -130,6 +130,6 @@ class KeuzelijstDiffCalculatorTests(unittest.TestCase):
 
         result = testcalculator_verschillende_keuzelijstwaardes.calculate_differences()
         self.assertEqual(3, len(result))
-        self.assertEqual('prd en aim keuzelijstwaarde verschillen van notatie', result[0][0])
-        self.assertEqual('prd en aim keuzelijstwaarde verschillen van label', result[1][0])
-        self.assertEqual('prd en aim keuzelijstwaarde verschillen van definitie', result[2][0])
+        self.assertEqual('prd en aim keuzelijstwaarde verschillen van notatie', result[0][1])
+        self.assertEqual('prd en aim keuzelijstwaarde verschillen van label', result[1][1])
+        self.assertEqual('prd en aim keuzelijstwaarde verschillen van definitie', result[2][1])
