@@ -1,7 +1,6 @@
 import datetime
 import shutil
 
-from GitHubDownloader import GitHubDownloader
 from KeuzelijstDiffCalculator import KeuzelijstDiffCalculator
 from SheetsWrapper import SheetsWrapper
 
@@ -26,7 +25,7 @@ if __name__ == '__main__':
                                   readonly_scope=False)
     sheetsWrapper.write_data_to_sheet(spreadsheet_id='14PwD7_mHJ7lZbBOBfPvejxm5-uwuFzxvQySHKgzxoOk',
                                       sheet_name='overzicht',
-                                      cell_start='A1',
+                                      range_start='A1',
                                       data=lines_to_write)
 
     for branch in branches:
