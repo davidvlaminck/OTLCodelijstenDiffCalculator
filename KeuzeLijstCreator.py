@@ -42,11 +42,11 @@ class KeuzelijstCreator:
                         kw.objectUri = t[0]
                         k.keuzelijstWaardes[t[0].replace('-test', '')] = kw
                 elif '#definition' in t[1]:
-                    k.keuzelijstWaardes[t[0]].definitie = t[2]
+                    k.keuzelijstWaardes[t[0].replace('-test', '')].definitie = t[2]
                 elif '#prefLabel' in t[1]:
-                    k.keuzelijstWaardes[t[0]].label = t[2]
+                    k.keuzelijstWaardes[t[0].replace('-test', '')].label = t[2]
                 elif '#notation' in t[1]:
-                    k.keuzelijstWaardes[t[0]].invulwaarde = t[2]
+                    k.keuzelijstWaardes[t[0].replace('-test', '')].invulwaarde = t[2]
         return k
 
     @classmethod
