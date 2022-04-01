@@ -26,8 +26,6 @@ class KeuzelijstDiffCalculator:
                 kl = KeuzelijstCreator.read_ttl_file_and_create_keuzelijst(self.temp_dir_path + branch + '/codelijsten/' + file)
                 self.keuzelijsten[branch][kl.objectUri] = kl
 
-        pass
-
     def calculate_differences(self):
         differences = []
         other_envs = list(self.branches_dict.keys())
@@ -40,10 +38,10 @@ class KeuzelijstDiffCalculator:
                     continue
 
                 if self.keuzelijsten['prd'][prdkeyKeuzelijst].label != self.keuzelijsten[env][prdkeyKeuzelijst].label:
-                    differences.append([env, f'prd en {env} keuzelijst verschillen van label', prdkeyKeuzelijst, self.keuzelijsten['prd'][prdkeyKeuzelijst].label, self.keuzelijsten[env][prdkeyKeuzelijst].label])
+                    differences.append([env, f'prd en {env} keuzelijst verschillen van label', prdkeyKeuzelijst, '', self.keuzelijsten['prd'][prdkeyKeuzelijst].label, self.keuzelijsten[env][prdkeyKeuzelijst].label])
 
                 if self.keuzelijsten['prd'][prdkeyKeuzelijst].definitie != self.keuzelijsten[env][prdkeyKeuzelijst].definitie:
-                    differences.append([env, f'prd en {env} keuzelijst verschillen van definitie', prdkeyKeuzelijst, self.keuzelijsten['prd'][prdkeyKeuzelijst].definitie, self.keuzelijsten[env][prdkeyKeuzelijst].definitie])
+                    differences.append([env, f'prd en {env} keuzelijst verschillen van definitie', prdkeyKeuzelijst, '', self.keuzelijsten['prd'][prdkeyKeuzelijst].definitie, self.keuzelijsten[env][prdkeyKeuzelijst].definitie])
 
                 for waardeUri in self.keuzelijsten['prd'][prdkeyKeuzelijst].keuzelijstWaardes:
                     if waardeUri not in self.keuzelijsten[env][prdkeyKeuzelijst].keuzelijstWaardes:
