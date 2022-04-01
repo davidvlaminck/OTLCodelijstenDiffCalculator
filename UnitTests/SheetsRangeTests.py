@@ -40,14 +40,14 @@ class SheetsRangeTests(unittest.TestCase):
 
         for test in testlist:
             with self.subTest(f'{str(test[0])} to {test[1]}'):
-                column = SheetsRange.convert_number_to_column(test[0])
+                column = SheetsRange._convert_number_to_column(test[0])
                 self.assertEqual(column, test[1])
 
         with self.subTest('invalid values'):
             with self.assertRaises(ValueError):
-                SheetsRange.convert_number_to_column(18279)
+                SheetsRange._convert_number_to_column(18279)
             with self.assertRaises(ValueError):
-                SheetsRange.convert_number_to_column(0)
+                SheetsRange._convert_number_to_column(0)
 
     def test_convert_column_to_number(self):
         testlist = [(1, 'A'),
@@ -63,11 +63,11 @@ class SheetsRangeTests(unittest.TestCase):
 
         for test in testlist:
             with self.subTest(f'{str(test[1])} to {test[0]}'):
-                column = SheetsRange.convert_column_to_number(test[1])
+                column = SheetsRange._convert_column_to_number(test[1])
                 self.assertEqual(column, test[0])
 
         with self.subTest('invalid values'):
             with self.assertRaises(ValueError):
-                SheetsRange.convert_column_to_number('')
+                SheetsRange._convert_column_to_number('')
             with self.assertRaises(ValueError):
-                SheetsRange.convert_column_to_number('AAAA')
+                SheetsRange._convert_column_to_number('AAAA')

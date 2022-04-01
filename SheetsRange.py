@@ -20,9 +20,9 @@ class SheetsRange:
     @range.setter
     def range(self, value):
         try:
-            self._column_str = re.split('\\d', value)[0]
+            self._column_str = re.split(r'\d', value)[0]
             self._row = int(value[len(self._column_str):])
-            self._column_int = self.convert_column_to_number(self._column_str)
+            self._column_int = self._convert_column_to_number(self._column_str)
 
         except ValueError as ex:
             raise ex
@@ -30,7 +30,7 @@ class SheetsRange:
             raise ValueError(f"can't set or update SheetsRange object with input {range}")
 
     @staticmethod
-    def convert_column_to_number(column: str) -> int:
+    def _convert_column_to_number(column: str) -> int:
         if len(column) < 1 or len(column) > 3:
             raise ValueError('the max value of the column is ZZZ')
 
@@ -41,7 +41,7 @@ class SheetsRange:
         return sum
 
     @staticmethod
-    def convert_number_to_column(number: int) -> str:
+    def _convert_number_to_column(number: int) -> str:
         if number < 1 or number > 18278:
             raise ValueError
 
@@ -64,4 +64,4 @@ class SheetsRange:
 
     def update_column_by_adding_number(self, column_update: int):
         self._column_int += column_update
-        self._column_str = self.convert_number_to_column(self._column_int)
+        self._column_str = self._convert_number_to_column(self._column_int)
