@@ -58,17 +58,63 @@ class SheetsWrapper:
                 values=data)
         ).execute()
 
-    def find_first_empty_row_from_starting_cell(self, spreadsheet_id: str, sheet_name: str, start_cell: str, step_size: int = 1000) -> str:
+    def get_sheets_in_spreadsheet(self, spreadsheet_id: str):
+        credentials = self.authenticate()
+        service = build('sheets', 'v4', credentials=credentials)
+        spreadsheet = service.spreadsheets().get(spreadsheetId=spreadsheet_id).execute()
+        sheets = spreadsheet.get('sheets')
+        sheets_dict = {}
+        for sheet in sheets:
+            sheets_dict[sheet['properties']['title']] = sheet['properties']
+        return sheets_dict
+
+    def clear_filter(self, spreadsheet_id: str, sheet_name: str):
+        credentials = self.authenticate()
+        service = build('sheets', 'v4', credentials=credentials)
+
+        sheets = self.get_sheets_in_spreadsheet(spreadsheet_id)
+
+        service.spreadsheets().batchUpdate(
+            spreadsheetId=spreadsheet_id,
+            body={'requests': [{'clearBasicFilter': {"sheetId": sheets[sheet_name]['sheetId']}
+                                }]}).execute()
+
+    def create_basic_filter(self, spreadsheet_id: str, sheet_name: str, range: str):
+        credentials = self.authenticate()
+        service = build('sheets', 'v4', credentials=credentials)
+
+        sheets = self.get_sheets_in_spreadsheet(spreadsheet_id)
+        start = SheetsCell(range.split(':')[0])
+        end = SheetsCell(range.split(':')[1])
+
+        service.spreadsheets().batchUpdate(
+            spreadsheetId=spreadsheet_id,
+            body=dict(requests=[{'setBasicFilter': {
+                "filter": {
+                    "range": {
+                        "sheetId": sheets[sheet_name]['sheetId'],
+                        "startRowIndex": start.row - 1,
+                        "endRowIndex": end.row,
+                        "startColumnIndex": start._column_int - 1,
+                        "endColumnIndex": end._column_int
+                    }
+                }
+            }}])).execute()
+
+    def find_first_empty_row_from_starting_cell(self, spreadsheet_id: str, sheet_name: str, start_cell: str,
+                                                step_size: int = 1000) -> str:
         start_sheetscell = SheetsCell(start_cell)
         total_nonempty_rows = 0
 
         while True:
             end_sheetscell = start_sheetscell.copy()
             end_sheetscell.update_row_by_adding_number(step_size - 1)
-            data = self.read_data_from_sheet(spreadsheet_id, sheet_name, start_sheetscell.cell + ':' + end_sheetscell.cell)
+
+            data = self.read_data_from_sheet(spreadsheet_id, sheet_name,
+                                             start_sheetscell.cell + ':' + end_sheetscell.cell)
             nonempty_rows = self._number_of_nonempty_rows_in_data(data)
             total_nonempty_rows += nonempty_rows
-            if nonempty_rows == 0:
+            if nonempty_rows == 0 or len(data) < step_size:
                 break
             start_sheetscell.update_row_by_adding_number(step_size)
             end_sheetscell.update_row_by_adding_number(step_size)
@@ -77,12 +123,11 @@ class SheetsWrapper:
         start_sheetscell.update_row_by_adding_number(total_nonempty_rows)
         return start_sheetscell.cell
 
-
     def _number_of_nonempty_rows_in_data(self, data: list) -> int:
         if len(data) == 0 or len(data[0]) == 0:
             return 0
         for i, row in enumerate(data):
-            if row[0] == '':
+            if len(row) == 0 or row[0] == '':
                 return i
         return len(data)
 
@@ -129,5 +174,3 @@ class SheetsWrapper:
             return [rows, columns]
         except:
             raise ValueError(f'{sheetrange} is not a valid range')
-
-

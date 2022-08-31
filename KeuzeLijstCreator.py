@@ -1,60 +1,81 @@
 import rdflib
+from rdflib import Graph, URIRef
 
 
 class Keuzelijst:
-    def __init__(self, label='', definitie='', objectUri=''):
+    def __init__(self, label='', definitie='', objectUri='', status=''):
         self.label = label
         self.definitie = definitie
         self.objectUri = objectUri
-        self.keuzelijstWaardes = {}
+        self.keuzelijst_waardes = {}
+        self.status = status
 
 
 class KeuzelijstWaarde:
-    def __init__(self, invulwaarde='', label='', definitie='', objectUri=''):
+    def __init__(self, invulwaarde='', label='', definitie='', objectUri='', status=''):
         self.invulwaarde = invulwaarde
         self.label = label
         self.definitie = definitie
         self.objectUri = objectUri
+        self.status = status
 
 
 class KeuzelijstCreator:
     @classmethod
-    def read_ttl_file_and_create_keuzelijst(cls, filepath: str = ''):
-        tuples_list = cls.load_ttl_file(filepath)
-        keuzelijst = cls.convert_tuples_to_keuzelijst(tuples_list)
-        return keuzelijst
-
-    @classmethod
-    def convert_tuples_to_keuzelijst(cls, tuples_list) -> Keuzelijst:
-        k = Keuzelijst()
-        for t in tuples_list:
-            if 'conceptscheme' in t[0]:
-                if '#ConceptScheme' in t[2]:
-                    k.objectUri = t[0]
-                elif '#definition' in t[1]:
-                    k.definitie = t[2]
-                elif '#prefLabel' in t[1]:
-                    k.label = t[2]
-            else:
-                if '#Concept' in t[2]:
-                    if not t[0] in k.keuzelijstWaardes:
-                        kw = KeuzelijstWaarde()
-                        kw.objectUri = t[0]
-                        k.keuzelijstWaardes[t[0].replace('-test', '')] = kw
-                elif '#definition' in t[1]:
-                    k.keuzelijstWaardes[t[0].replace('-test', '')].definitie = t[2]
-                elif '#prefLabel' in t[1]:
-                    k.keuzelijstWaardes[t[0].replace('-test', '')].label = t[2]
-                elif '#notation' in t[1]:
-                    k.keuzelijstWaardes[t[0].replace('-test', '')].invulwaarde = t[2]
+    def read_ttl_file_and_create_keuzelijst(cls, filepath: str = '', env: str = ''):
+        g = KeuzelijstCreator.get_graph_from_file(filepath)
+        k = KeuzelijstCreator.get_keuzelijstwaardes_from_graph(g, env)
         return k
 
     @classmethod
-    def load_ttl_file(cls, filepath: str = ''):
+    def get_graph_from_file(cls, filepath: str = ''):
         g = rdflib.Graph()
-        g.parse(filepath, format="turtle")
+        return g.parse(filepath, format="turtle")
 
-        lijst = sorted(g, key=lambda t: (t[0], t[1]))
-        lijst = list(map(lambda x: (str(x[0]), str(x[1]), str(x[2])), lijst))
+    @classmethod
+    def get_keuzelijstwaardes_from_graph(cls, g: Graph, env):
+        k = Keuzelijst()
 
-        return lijst
+        subjects = set(g.subjects(predicate=None, object=None))
+        distinct_subjects_list = sorted(subjects, key=lambda x: str(x), reverse=True)
+
+        for distinct_subject in distinct_subjects_list:
+            subject_str = str(distinct_subject)
+            if 'conceptscheme' in subject_str:
+                k.status = g.value(subject=distinct_subject, predicate=URIRef('https://www.w3.org/ns/adms#status'))
+                if k.status is not None:
+                    if env == 'tei':
+                        k.status = str(k.status).replace(
+                            'https://wegenenverkeer-test.data.vlaanderen.be/id/concept/KlAdmsStatus/', '').replace(
+                            'https://wegenenverkeer.data.vlaanderen.be/id/concept/KlAdmsStatus/', '')
+                    else:
+                        k.status = str(k.status).replace(
+                            'https://wegenenverkeer.data.vlaanderen.be/id/concept/KlAdmsStatus/', '')
+                k.label = str(
+                    g.value(subject=distinct_subject, predicate=URIRef('http://www.w3.org/2004/02/skos/core#prefLabel')))
+                k.objectUri = subject_str.replace('-test', '')
+                k.definitie = str(
+                g.value(subject=distinct_subject, predicate=URIRef('http://www.w3.org/2004/02/skos/core#definition')))
+
+                continue
+
+            waarde = KeuzelijstWaarde()
+            waarde.objectUri = subject_str
+            status = g.value(subject=distinct_subject, predicate=URIRef('https://www.w3.org/ns/adms#status'))
+            if status is not None:
+                if env == 'tei':
+                    waarde.status = str(status).replace(
+                        'https://wegenenverkeer-test.data.vlaanderen.be/id/concept/KlAdmsStatus/', '').replace(
+                        'https://wegenenverkeer.data.vlaanderen.be/id/concept/KlAdmsStatus/', '')
+                else:
+                    waarde.status = str(status).replace(
+                        'https://wegenenverkeer.data.vlaanderen.be/id/concept/KlAdmsStatus/', '')
+            waarde.invulwaarde = str(
+                g.value(subject=distinct_subject, predicate=URIRef('http://www.w3.org/2004/02/skos/core#notation')))
+            waarde.definitie = str(
+                g.value(subject=distinct_subject, predicate=URIRef('http://www.w3.org/2004/02/skos/core#definition')))
+            waarde.label = str(
+                g.value(subject=distinct_subject, predicate=URIRef('http://www.w3.org/2004/02/skos/core#prefLabel')))
+            k.keuzelijst_waardes[waarde.invulwaarde] = waarde
+
+        return k

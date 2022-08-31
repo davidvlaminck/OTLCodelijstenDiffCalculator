@@ -14,6 +14,14 @@ class SheetsCell:
         self.cell = cell
 
     @property
+    def row(self):
+        return int(self._row)
+
+    @row.setter
+    def row(self, value: int):
+        self._row = value
+
+    @property
     def cell(self):
         return self._column_str + str(self._row)
 

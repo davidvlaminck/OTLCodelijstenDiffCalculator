@@ -10,37 +10,37 @@ branches = {
 }
 
 eersteLijstPrd = Keuzelijst(label='label', definitie='definitie', objectUri='kl1')
-eersteLijstPrd.keuzelijstWaardes = {
+eersteLijstPrd.keuzelijst_waardes = {
     'uri1': KeuzelijstWaarde(label='waarde1', definitie='definitie1', objectUri='uri1', invulwaarde='invulwaarde1'),
     'uri2': KeuzelijstWaarde(label='waarde2', definitie='definitie2', objectUri='uri2', invulwaarde='invulwaarde2')}
 
 tweedeLijstPrd = Keuzelijst(label='label', definitie='definitie', objectUri='kl2')
-tweedeLijstPrd.keuzelijstWaardes = {
+tweedeLijstPrd.keuzelijst_waardes = {
     'uri1': KeuzelijstWaarde(label='waarde1', definitie='definitie1', objectUri='uri1', invulwaarde='invulwaarde1'),
     'uri2': KeuzelijstWaarde(label='waarde2', definitie='definitie2', objectUri='uri2', invulwaarde='invulwaarde2')}
 
 eersteLijstAim = Keuzelijst(label='label', definitie='definitie', objectUri='kl1')
-eersteLijstAim.keuzelijstWaardes = {
+eersteLijstAim.keuzelijst_waardes = {
     'uri1': KeuzelijstWaarde(label='waarde1', definitie='definitie1', objectUri='uri1', invulwaarde='invulwaarde1'),
     'uri2': KeuzelijstWaarde(label='waarde2', definitie='definitie2', objectUri='uri2', invulwaarde='invulwaarde2')}
 
 tweedeLijstAim = Keuzelijst(label='label', definitie='definitie', objectUri='kl2')
-tweedeLijstAim.keuzelijstWaardes = {
+tweedeLijstAim.keuzelijst_waardes = {
     'uri1': KeuzelijstWaarde(label='waarde1', definitie='definitie1', objectUri='uri1', invulwaarde='invulwaarde1')}
 
 derdeLijstAim = Keuzelijst(label='label', definitie='definitie', objectUri='kl2')
-derdeLijstAim.keuzelijstWaardes = {
+derdeLijstAim.keuzelijst_waardes = {
     'uri1': KeuzelijstWaarde(label='waarde1', definitie='definitie1', objectUri='uri1', invulwaarde='invulwaarde1'),
     'uri2': KeuzelijstWaarde(label='waarde2', definitie='definitie2', objectUri='uri2', invulwaarde='invulwaarde2'),
     'uri3': KeuzelijstWaarde(label='waarde3', definitie='definitie3', objectUri='uri3', invulwaarde='invulwaarde3')}
 
 vierdeLijstAim = Keuzelijst(label='label_aangepast', definitie='definitie_aangepast', objectUri='kl1')
-vierdeLijstAim.keuzelijstWaardes = {
+vierdeLijstAim.keuzelijst_waardes = {
     'uri1': KeuzelijstWaarde(label='waarde1', definitie='definitie1', objectUri='uri1', invulwaarde='invulwaarde1'),
     'uri2': KeuzelijstWaarde(label='waarde2', definitie='definitie2', objectUri='uri2', invulwaarde='invulwaarde2')}
 
 vijfdeLijstAim = Keuzelijst(label='label', definitie='definitie', objectUri='kl1')
-vijfdeLijstAim.keuzelijstWaardes = {
+vijfdeLijstAim.keuzelijst_waardes = {
     'uri1': KeuzelijstWaarde(label='waarde1', definitie='definitie1', objectUri='uri1', invulwaarde='invulwaarde1'),
     'uri2': KeuzelijstWaarde(label='waarde2_aangepast', definitie='definitie2_aangepast', objectUri='uri2', invulwaarde='invulwaarde2_aangepast')}
 

@@ -27,3 +27,4 @@ class GitHubDownloader:
             shutil.rmtree(directory, onerror=del_rw)
 
         git("clone", github_url, directory, '-b', branch)
+        # git filter-repo --subdirectory-filter path/to/dir

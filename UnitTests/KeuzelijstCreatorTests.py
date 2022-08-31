@@ -55,10 +55,10 @@ class KeuzelijstCreatorTests(unittest.TestCase):
 
     def test_convert_tuples_to_keuzelijst_keuzelijstWaardes(self):
         keuzelijst = KeuzelijstCreator.convert_tuples_to_keuzelijst(tuples_list=expected_rdf_lijst)
-        self.assertEqual(2, len(keuzelijst.keuzelijstWaardes.items()))
+        self.assertEqual(2, len(keuzelijst.keuzelijst_waardes.items()))
         uri = 'https://wegenenverkeer.data.vlaanderen.be/id/concept/AntiParkeerpaalType/conischeTrottoirpaalAmsterdammer'
-        self.assertEqual(uri, keuzelijst.keuzelijstWaardes[uri].objectUri)
-        self.assertEqual('conischeTrottoirpaalAmsterdammer', keuzelijst.keuzelijstWaardes[uri].notitie)
-        self.assertEqual('conischeTrottoirpaalAmsterdammer', keuzelijst.keuzelijstWaardes[uri].label)
-        self.assertEqual('Conische paal met afgeronde kop en sierring.', keuzelijst.keuzelijstWaardes[uri].definitie)
+        self.assertEqual(uri, keuzelijst.keuzelijst_waardes[uri].objectUri)
+        self.assertEqual('conischeTrottoirpaalAmsterdammer', keuzelijst.keuzelijst_waardes[uri].notitie)
+        self.assertEqual('conischeTrottoirpaalAmsterdammer', keuzelijst.keuzelijst_waardes[uri].label)
+        self.assertEqual('Conische paal met afgeronde kop en sierring.', keuzelijst.keuzelijst_waardes[uri].definitie)
 
