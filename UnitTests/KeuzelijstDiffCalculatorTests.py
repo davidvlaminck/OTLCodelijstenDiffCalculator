@@ -6,6 +6,7 @@ from KeuzelijstDiffCalculator import KeuzelijstDiffCalculator
 
 branches = {
     'aim': 'aim',
+    'tei': 'test',
     'prd': 'master'
 }
 
@@ -133,3 +134,21 @@ class KeuzelijstDiffCalculatorTests(unittest.TestCase):
         self.assertEqual('prd en aim keuzelijstwaarde verschillen van notatie', result[0][1])
         self.assertEqual('prd en aim keuzelijstwaarde verschillen van label', result[1][1])
         self.assertEqual('prd en aim keuzelijstwaarde verschillen van definitie', result[2][1])
+
+    def test_calculate_change_needed_all_same(self):
+        testcalculator = KeuzelijstDiffCalculator(branches)
+        record = ['testkeuzelijst', '', 'ingebruik', 'ingebruik', 'ingebruik']
+        testcalculator.calculate_change_needed(record)
+        self.assertEqual('nee', record[5])
+
+    def test_calculate_change_needed_different(self):
+        testcalculator = KeuzelijstDiffCalculator(branches)
+        record = ['testkeuzelijst', '', 'ingebruik', '', 'uitgebruik']
+        testcalculator.calculate_change_needed(record)
+        self.assertEqual('ja', record[5])
+
+    def test_calculate_change_needed_same_and_not_complete(self):
+        testcalculator = KeuzelijstDiffCalculator(branches)
+        record = ['testkeuzelijst', '', 'status niet ingevuld', 'ingebruik', 'ingebruik']
+        testcalculator.calculate_change_needed(record)
+        self.assertEqual('nee', record[5])

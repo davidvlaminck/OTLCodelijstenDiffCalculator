@@ -38,8 +38,6 @@ if __name__ == '__main__':
 
     temp_dir_path = '/home/davidlinux/.tmp/'
 
-
-
     sheetsWrapper = SheetsWrapper(
         service_cred_path='/home/davidlinux/Documents/AWV/resources/driven-wonder-149715-ca8bdf010930.json',
         readonly_scope=False)

@@ -59,20 +59,7 @@ class KeuzelijstDiffCalculator:
                     else:
                         record.append(keuzelijst_instance.status)
 
-            statussen = set(record[-3:])
-            if 'status niet ingevuld' in statussen:
-                statussen.add('ingebruik')
-                statussen.remove('status niet ingevuld')
-
-            if len(statussen) > 1:
-                record.append('ja')
-            elif len(statussen) == 1:
-                if not (record[-3] == record[-2] == record[-1]):
-                    record.append('ja')
-                else:
-                    record.append('nee')
-            else:
-                record.append('nee')
+            self.calculate_change_needed(record)
 
             record.append(current_spoc)
             record.append(current_thema)
@@ -95,13 +82,7 @@ class KeuzelijstDiffCalculator:
                         else:
                             record.append(kl_object.status)
 
-                statussen = set(record[-3:])
-                if 'status niet ingevuld' in statussen:
-                    statussen.remove('status niet ingevuld')  # TODO te bekijken wat hiermee te doen
-                if len(statussen) > 1:
-                    record.append('ja')
-                else:
-                    record.append('nee')
+                self.calculate_change_needed(record)
 
                 record.append(current_spoc)
                 record.append(current_thema)
@@ -111,6 +92,17 @@ class KeuzelijstDiffCalculator:
                 records.append(record)
 
         return records
+
+    @staticmethod
+    def calculate_change_needed(record):
+        statussen = set(record[-3:])
+        if 'status niet ingevuld' in statussen:
+            statussen.add('ingebruik')
+            statussen.remove('status niet ingevuld')
+        if len(statussen) > 1:
+            record.append('ja')
+        else:
+            record.append('nee')
 
     def update_differences_with_persistent_data(self, differences, existing_data):
         persistent_data = list(filter(lambda x: len(x) > 8, existing_data))
