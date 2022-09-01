@@ -38,9 +38,13 @@ class KeuzelijstDiffCalculator:
         records = [['keuzelijst', 'keuzelijstwaarde', 'PRD', 'TEI', 'AIM', 'verschillen?', 'SPOC', 'Thema',
                     'opmerkingen (persistent)', 'vrije opmerkingen (persistent)']]
         for keuzelijst_uri in k_uris:
+
+            if 'KlAardingskabelSectie' in keuzelijst_uri:
+                pass
+
             current_spoc = ''
             current_thema = ''
-            record = [keuzelijst_uri, '']
+            record = [keuzelijst_uri, '{keuzelijst zelf}']
             keuzelijstwaardes_over_alle_omgevingen = []
             for branch in self.branches_dict:
                 if keuzelijst_uri not in self.keuzelijsten[branch]:
@@ -57,9 +61,16 @@ class KeuzelijstDiffCalculator:
 
             statussen = set(record[-3:])
             if 'status niet ingevuld' in statussen:
-                statussen.remove('status niet ingevuld') # TODO te bekijken wat hiermee te doen
+                statussen.add('ingebruik')
+                statussen.remove('status niet ingevuld')
+
             if len(statussen) > 1:
                 record.append('ja')
+            elif len(statussen) == 1:
+                if not (record[-3] == record[-2] == record[-1]):
+                    record.append('ja')
+                else:
+                    record.append('nee')
             else:
                 record.append('nee')
 
