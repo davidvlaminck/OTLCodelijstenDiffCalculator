@@ -152,3 +152,9 @@ class KeuzelijstDiffCalculatorTests(unittest.TestCase):
         record = ['testkeuzelijst', '', 'status niet ingevuld', 'ingebruik', 'ingebruik']
         testcalculator.calculate_change_needed(record)
         self.assertEqual('nee', record[5])
+
+    def test_calculate_change_needed_different_and_not_complete(self):
+        testcalculator = KeuzelijstDiffCalculator(branches)
+        record = ['testkeuzelijst', '', 'status niet ingevuld', '', 'ingebruik']
+        testcalculator.calculate_change_needed(record)
+        self.assertEqual('ja', record[5])
