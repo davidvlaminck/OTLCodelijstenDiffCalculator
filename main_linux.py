@@ -78,7 +78,7 @@ if __name__ == '__main__':
     start_sheetcell = SheetsCell('A3')
     sheetsWrapper.clear_filter(overzicht_sheet_id, overzicht_sheet_name)
     end_sheetcell = start_sheetcell.copy()
-    end_sheetcell.update_column_by_adding_number(9)
+    end_sheetcell.update_column_by_adding_number(10)
     end_sheetcell.update_row_by_adding_number(len(differences) - 1)
     sheetsWrapper.create_basic_filter(overzicht_sheet_id, overzicht_sheet_name,
                                       f'{start_sheetcell.cell}:{end_sheetcell.cell}')

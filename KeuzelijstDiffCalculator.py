@@ -34,9 +34,9 @@ class KeuzelijstDiffCalculator:
 
         k_uris = sorted(set(k_uris))
 
-
-        records = [['keuzelijst', 'keuzelijstwaarde', 'PRD', 'TEI', 'AIM', 'verschillen?', 'SPOC', 'Thema',
-                    'opmerkingen (persistent)', 'vrije opmerkingen (persistent)']]
+        records = [
+            ['keuzelijst', 'keuzelijstwaarde', 'keuzelijst label', 'PRD', 'TEI', 'AIM', 'verschillen?', 'SPOC', 'Thema',
+             'opmerkingen (persistent)', 'vrije opmerkingen (persistent)']]
         for keuzelijst_uri in k_uris:
 
             if 'KlAardingskabelSectie' in keuzelijst_uri:
@@ -45,12 +45,16 @@ class KeuzelijstDiffCalculator:
             current_spoc = ''
             current_thema = ''
             record = [keuzelijst_uri, '{keuzelijst zelf}']
+            label_toegevoegd = False
             keuzelijstwaardes_over_alle_omgevingen = []
             for branch in self.branches_dict:
                 if keuzelijst_uri not in self.keuzelijsten[branch]:
                     record.append('')
                 else:
                     keuzelijst_instance = self.keuzelijsten[branch][keuzelijst_uri]
+                    if not label_toegevoegd:
+                        record.insert(2, keuzelijst_instance.label)
+                        label_toegevoegd = True
                     if current_spoc == '' and keuzelijst_instance.label in kl_eigenaar_dict:
                         current_spoc, current_thema = kl_eigenaar_dict[keuzelijst_instance.label]
                     keuzelijstwaardes_over_alle_omgevingen.extend(keuzelijst_instance.keuzelijst_waardes.keys())
@@ -70,6 +74,7 @@ class KeuzelijstDiffCalculator:
 
             for keuzelijstwaarde in sorted(set(keuzelijstwaardes_over_alle_omgevingen)):
                 record = [keuzelijst_uri, keuzelijstwaarde]
+                label_toegevoegd = False
                 for branch in self.branches_dict:
                     if keuzelijst_uri not in self.keuzelijsten[branch]:
                         record.append('')
@@ -77,6 +82,9 @@ class KeuzelijstDiffCalculator:
                         record.append('')
                     else:
                         kl_object = self.keuzelijsten[branch][keuzelijst_uri].keuzelijst_waardes[keuzelijstwaarde]
+                        if not label_toegevoegd:
+                            record.insert(2, kl_object.label)
+                            label_toegevoegd = True
                         if kl_object.status == '' or kl_object.status is None:
                             record.append('status niet ingevuld')
                         else:
@@ -105,16 +113,16 @@ class KeuzelijstDiffCalculator:
             record.append('nee')
 
     def update_differences_with_persistent_data(self, differences, existing_data):
-        persistent_data = list(filter(lambda x: len(x) > 8, existing_data))
+        persistent_data = list(filter(lambda x: len(x) > 9, existing_data))
         for persistent_row in persistent_data:
             i = self.find_difference_row_index(differences, persistent_row[0], persistent_row[1])
             if i == -1:
                 continue
             diff_row = differences[i]
-            if len(persistent_row) >= 9:
-                diff_row[8] = persistent_row[8]
             if len(persistent_row) >= 10:
                 diff_row[9] = persistent_row[9]
+            if len(persistent_row) >= 11:
+                diff_row[10] = persistent_row[10]
 
             differences[i] = diff_row
 
