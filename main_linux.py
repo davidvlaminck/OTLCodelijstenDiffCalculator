@@ -31,9 +31,9 @@ def get_spocs(sheetsWrapper: SheetsWrapper):
 
 if __name__ == '__main__':
     branches = {
-        'aim': 'aim',
+        'prd': 'master',
         'tei': 'test',
-        'prd': 'master'
+        'aim': 'aim'
     }
 
     temp_dir_path = '/home/davidlinux/.tmp/'

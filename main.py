@@ -8,9 +8,9 @@ from SheetsWrapper import SheetsWrapper
 
 if __name__ == '__main__':
     branches = {
-        'aim': 'aim',
+        'prd': 'master',
         'tei': 'test',
-        'prd': 'master'
+        'aim': 'aim'
     }
 
     temp_dir_path = 'C:\\temp'
