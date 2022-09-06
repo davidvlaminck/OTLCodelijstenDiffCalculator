@@ -1,5 +1,7 @@
 import os
 
+from rdflib.plugins.parsers.notation3 import BadSyntax
+
 from GitHubDownloader import GitHubDownloader
 from KeuzeLijstCreator import KeuzelijstCreator
 
@@ -23,9 +25,12 @@ class KeuzelijstDiffCalculator:
         for branch in self.branches_dict:
             self.keuzelijsten[branch] = {}
             for file in os.listdir(self.temp_dir_path + branch + '/codelijsten'):
-                kl = KeuzelijstCreator.read_ttl_file_and_create_keuzelijst(
-                    self.temp_dir_path + branch + '/codelijsten/' + file, env=branch)
-                self.keuzelijsten[branch][kl.objectUri.replace('-test', '')] = kl
+                try:
+                    kl = KeuzelijstCreator.read_ttl_file_and_create_keuzelijst(
+                        self.temp_dir_path + branch + '/codelijsten/' + file, env=branch)
+                    self.keuzelijsten[branch][kl.objectUri.replace('-test', '')] = kl
+                except BadSyntax:
+                    print(f'Bad Syntax in file {branch}/{file}')
 
     def calculate_differences(self, kl_eigenaar_dict):
         k_uris = []
