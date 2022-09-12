@@ -112,7 +112,10 @@ class KeuzelijstDiffCalculator:
         if 'status niet ingevuld' in statussen:
             statussen.add('ingebruik')
             statussen.remove('status niet ingevuld')
-        if len(statussen) > 1:
+
+        if len(statussen) == 2 and '' in statussen and 'verwijderd' in statussen:
+            record.append('nee')
+        elif len(statussen) > 1:
             record.append('ja')
         else:
             record.append('nee')
